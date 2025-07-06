@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -16,7 +17,8 @@ class Settings(BaseSettings):
     Application settings using Pydantic BaseSettings
     """
     mongodb_url: str = "mongodb://localhost:27017/testing"
-    
+
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
@@ -32,6 +34,15 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
+)
+
+# Configure CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
